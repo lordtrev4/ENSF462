@@ -11,7 +11,7 @@ def server_start():
 
     serversocket.listen() # listening for connections
 
-    (connect, address) = serversocket.accept()
+    (connect, address) = serversocket.accept() # creates a socket object connect to send and recieve data
 
     try:
         user1name = connect.recv(1024).decode() # receiving the name of the client
@@ -40,6 +40,6 @@ def server_start():
     finally:
         serversocket.close()
         print("Connection closed.")
-        
+
 if __name__ == "__main__":
     server_start()
