@@ -4,7 +4,6 @@ def server_start():
     user2name = input("Enter your name: ") # name inputting
 
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # creating a socket
-
     serveraddress = ('192.168.0.92', 6000)
     serversocket.bind(serveraddress)
     print(f"Server started on {serveraddress[0]}:{serveraddress[1]}") # check if the server is run on the right IP address and port
