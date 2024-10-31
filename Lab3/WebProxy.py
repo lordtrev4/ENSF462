@@ -36,7 +36,7 @@ while 1:
     url = slashPlusUrl.partition("/")[2]
     # fill in start
     hostn = url.split("/")[0] #extract the hostname
-    pathname = url[len(hostn):] #extract the pathname
+    pathname = url[len(hostn):] #extract the pathname (remaining part of the URL)
     # fill in end.
     pathname = "/" + pathname
     # remove "www." from the hostname if it starts with "www."
@@ -105,9 +105,9 @@ while 1:
 
             #Separate header and object
             #Hint use split function. Check the lecture notes to see what separates the response header and object
-            response_header = total_response.split(b'\r\n\r\n')[0]
+            response_header = total_response.split(b'\r\n\r\n')[0] # recieves header
             #Fill in start #Fill in end
-            response_object = total_response.split(b'\r\n\r\n')[1]
+            response_object = total_response.split(b'\r\n\r\n')[1] # recieves body 
             #Fill in start #Fill in end
 
 
@@ -116,7 +116,7 @@ while 1:
                 # Then, send http response header and object to the client
                 #Fill in start
                 os.makedirs(os.path.dirname(directory), exist_ok=True)
-                with open(directory, "wb") as f:
+                with open(directory, "wb") as f: # open file in directory in binary write mode
                     f.write(response_object)
 
                 proxyCliSock.send("HTTP/1.0 200 OK\r\n".encode())
