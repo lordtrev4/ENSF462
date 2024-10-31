@@ -96,22 +96,38 @@ while 1:
             # receive data from web server
             #Hint: You can use a while loop and get response in chunks until it is finished.
             #Fill in start
+            while True:
+                chunk = proxyAsClientSocket.recv(1024)
+                if not chunk:
+                    break
+                total_response += chunk
             #Fill in end
 
             #Separate header and object
             #Hint use split function. Check the lecture notes to see what separates the response header and object
-            response_header = #Fill in start #Fill in end
-            response_object = #Fill in start #Fill in end
+            response_header = total_response.split(b'\r\n\r\n')[0]
+            #Fill in start #Fill in end
+            response_object = total_response.split(b'\r\n\r\n')[1]
+            #Fill in start #Fill in end
 
 
             if b'200 OK' in response_header:
                 # if the response is a 200 OK response create the directory and file and write the object into the file
                 # Then, send http response header and object to the client
                 #Fill in start
+                os.makedirs(os.path.dirname(directory), exist_ok=True)
+                with open(directory, "wb") as f:
+                    f.write(response_object)
+
+                proxyCliSock.send("HTTP/1.0 200 OK\r\n".encode())
+                proxyCliSock.send("Content-Type:text/html\r\n".encode())
+                proxyCliSock.send("Connection: close \r\n".encode())
+                proxyCliSock.send(response_object)
                 #Fill in end
             else:
                 #Otherwise, i.e., if response is not a 200 OK message,send 400 bad response
                 #Fill in start
+                proxyCliSock.send("HTTP/1.0 400 Bad Request\r\n".encode())
                 #Fill in end
 
             # close socket between proxy and origin server
