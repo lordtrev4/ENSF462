@@ -4,16 +4,20 @@ import os
 # Create a server socket, bind it to a port and start listening
 proxySerSock = socket(AF_INET, SOCK_STREAM)
 #fill in start.
+proxySerSock.bind(('localhost', 8888))
+proxySerSock.listen(5) #listen up to 5 connections
 #fill in end.
 
 while 1:
     print('Ready to serve...')
     #accept connection from clients
-    proxyCliSock, addr = #Fill in start #Fill in end
+    proxyCliSock, addr = proxySerSock.accept()
+    #Fill in start #Fill in end
     print('Received a connection from:', addr)
 
     # get the http request from client
-    message = # fill in start  # fill in end
+    message = proxyCliSock.recv(1024).decode() #Recieve HTTP request from client
+    # fill in start  # fill in end
     print(message)
 
     # if message is not a GET request send a response 400 Bad request to the client
@@ -22,6 +26,8 @@ while 1:
     if not message.startswith("GET"):
         print("message is not a GET")
         # fill in start.
+        proxyCliSock.send("HTTP/1.0 400 Bad Request\r\n".encode()) #CHeck this again later
+        proxyCliSock.close()
         # fill in end.
         continue
 
@@ -29,8 +35,8 @@ while 1:
     slashPlusUrl = message.split()[1]
     url = slashPlusUrl.partition("/")[2]
     # fill in start
-    #hostn =
-    #pathname =
+    hostn = url.split("/")[0] #extract the hostname
+    pathname = url[len(hostn):] #extract the pathname
     # fill in end.
     pathname = "/" + pathname
     # remove "www." from the hostname if it starts with "www."
@@ -52,20 +58,27 @@ while 1:
 
         # Send http response header and object
         #fill in start
+        proxyCliSock.send("HTTP/1.0 200 OK\r\n".encode())
+        proxyCliSock.send("Content-Type:text/html\r\n".encode())
+        proxyCliSock.send("Connection: close \r\n".encode())
+        proxyCliSock.send(object)
         #fill in end
 
         fileExist = "true"
         print('Read from cache')
         #close socket and file
         #fill in start
+        proxyCliSock.close()
         #fill in end
 
     except IOError: # Error handling for file not found in cache
 
         if fileExist == "false":
             # Create a socket on the proxyserver to connect to the original server on port 80
-            proxyAsClientSocket = #Fill in start #Fill in end
+            proxyAsClientSocket = socket(AF_INET, SOCK_STREAM)
+            #Fill in start #Fill in end
             # Connect to the original server on port 80
+            proxyAsClientSocket.connect((hostn, 80))
             #Fill in start #Fill in end
 
 
@@ -73,6 +86,8 @@ while 1:
             # Hint : use pathname and hostn in the request message
 
             #fill in start
+            get_request = "GET " + pathname + " HTTP/1.0\r\nHost: " + hostn + "\r\n\r\n"
+            proxyAsClientSocket.send(get_request.encode())
             #fill in end
 
             # initialize response to empty in binary format - works for any type of document
