@@ -16,7 +16,7 @@ while 1:
     print('Received a connection from:', addr)
 
     # get the http request from client
-    message = proxyCliSock.recv(1024).decode() #Recieve HTTP request from client
+    message = proxyCliSock.recv(4096).decode() #Recieve HTTP request from client
     # fill in start  # fill in end
     print(message)
 
@@ -68,6 +68,7 @@ while 1:
         print('Read from cache')
         #close socket and file
         #fill in start
+        f.close()
         proxyCliSock.close()
         #fill in end
 
